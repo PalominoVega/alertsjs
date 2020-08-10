@@ -1,20 +1,10 @@
- // initializer
- function nilaToastrInit() {
-    const body = document.querySelector("#alert").parentNode;
-    const rootElement = document.querySelector("#alert");
-
-    const toast = document.createElement("div");
-    toast.setAttribute("id", "nila-toastr");
-    body.insertBefore(toast, rootElement);
-  }
-
-// Show Toastr
-// status: 
-// success
-// warning
-// danger
-// info
-function nilaToastrMessage(message, status) {
+function alertMessage(message, status, location) {
+    if(typeof(location)=="undefined"){
+      location="top-center";
+    }
+    if(typeof(status)=="undefined"){
+      status="info";
+    }
     const alert = document.createElement("div");
     const alertIcon = document.createElement("div");
     const alertContent = document.createElement("div");
@@ -22,6 +12,7 @@ function nilaToastrMessage(message, status) {
     const alertDismiss = document.createElement("div");
 
     const delay = 100;
+    
     // alert
     alert.className = "alert";
     setTimeout(function () {
@@ -35,7 +26,7 @@ function nilaToastrMessage(message, status) {
     // message
     alertMessage.className = "alert-message";
     alertMessage.textContent = message;
-
+   
     // icon
     alertIcon.className = "alert-icon ";
 
@@ -49,11 +40,9 @@ function nilaToastrMessage(message, status) {
     alert.appendChild(alertDismiss);
 
     // add to dom
-    const toast = document.getElementById("nila-toastr");
-    toast.prepend(alert);
+    addDom(alert, location);
 
     // auto closing
-
     // setTimeout(function () {
     //   alert.classList.remove("alert-active");
     //   alert.classList.add("alert-closing");
@@ -67,7 +56,7 @@ function nilaToastrMessage(message, status) {
     // remove by clicking
     function dismissAlert(event) {
       if (event.target.parentElement.classList.contains("alert")) {
-        console.log("true");
+        // console.log("true");
         const alert = event.target.parentElement;
         alert.classList.remove("alert-active");
         alert.classList.add("alert-closing");
@@ -76,10 +65,20 @@ function nilaToastrMessage(message, status) {
         }, 500);
       }
     }
-
+    
     document.addEventListener("click", dismissAlert);
   }
-
-
-// just need call this method
-nilaToastrInit()
+   
+  function addDom(alert, location) {
+    // si encuentra la clase no crear 
+    let classlocation='alert-wrapper alert-'+location;
+    let toast=document.getElementsByClassName(classlocation);
+    if(toast.length>0){
+      toast[0].prepend(alert);
+    }else{
+      toast = document.createElement("div");
+      toast.className=classlocation;
+      document.body.insertBefore(toast, document.body.firstChild);
+      toast.prepend(alert);
+    };
+  }
